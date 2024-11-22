@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prestations Disponibles{% endblock %}
+
+{% block body %}
+<div class="row">
+    <!-- Barre latérale pour les filtres -->
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title mb-4 text-center">Filtres</h4>
+                {{ form_start(form, {'method': 'GET'}) }}
+                    <div class="mb-3">
+                        {{ form_label(form.type, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.prixMax, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.prixMax, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.dateDebut, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.dateFin, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Appliquer les filtres
+                    </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des prestations -->
+    <div class="col-md-9">
+        <h4 class="mb-4">Résultats</h4>
+        {% if prestations is empty %}
+            <div class="alert alert-warning text-center">
+                <i class="fas fa-exclamation-circle"></i> Aucune prestation trouvée pour ces critères.
+            </div>
+        {% else %}
+            <div class="row">
+                {% for prestation in prestations %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <!-- Image placeholder -->
+                            <div class="card-img-top bg-light d-flex justify-content-center align-items-center" style="height: 150px;">
+                                <i class="fas fa-briefcase fa-3x text-secondary"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">{{ prestation.typePrestation.nom }}</h5>
+                                <p class="card-text">
+                                    <strong>Disponibilité :</strong><br>
+                                    Du {{ prestation.dateDebutDisponibilite|date('d/m/Y') }} au {{ prestation.dateFinDisponibilite|date('d/m/Y') }}
+                                </p>
+                                <p class="card-text"><strong>Prix :</strong> {{ prestation.prix }} €</p>
+
+                                <p>
+                                    <strong>Note moyenne :</strong><br>
+                                    {% set averageRating = prestation.getAverageRating() %}
+                                    {% for i in 1..5 %}
+                                        {% if i <= averageRating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-secondary"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    ({{ averageRating|number_format(1) }} / 5)
+                                </p>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ path('app_prestation_details', {id: prestation.id}) }}" class="btn btn-outline-primary btn-sm">
+                                        Voir les détails
+                                    </a>
+                                    {% if is_granted('ROLE_CLIENT') %}
+                                        <a href="{{ path('app_demande_new', { id: prestation.id }) }}" class="btn btn-success btn-sm">
+                                            Faire une demande
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Prestation{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1 class="display-6 text-primary">Détails de la Prestation</h1>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Informations générales</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ prestation.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Disponibilité</th>
+                        <td>
+                            Du {{ prestation.dateDebutDisponibilite|date('d/m/Y H:i') }} 
+                            au {{ prestation.dateFinDisponibilite|date('d/m/Y H:i') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prix</th>
+                        <td>{{ prestation.prix }} €</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prix journalier</th>
+                        <td>{{ prestation.prixJour }} €</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Commentaires</h5>
+        </div>
+        <div class="card-body">
+            {% if prestation.commentaires is empty %}
+                <div class="alert alert-warning text-center">
+                    Aucun commentaire pour cette prestation.
+                </div>
+            {% else %}
+                <ul class="list-group">
+                    {% for commentaire in prestation.commentaires %}
+                        <li class="list-group-item">
+                            <strong>{{ commentaire.client.email }}</strong> - 
+                            <span>
+                                {% for i in 1..5 %}
+                                    {% if i <= commentaire.note %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-secondary"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                ({{ commentaire.note }} / 5)
+                            </span>
+                            <p class="mt-2">{{ commentaire.commentaire }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{{ path('app_prestation_index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+        <a href="{{ path('app_prestation_edit', {'id': prestation.id}) }}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Modifier
+        </a>
+        {{ include('prestation/_delete_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}

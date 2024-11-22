@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une Demande{% endblock %}
+
+{% block body %}
+    {% set title = 'Créer une Demande' %}
+    {% set back_path = 'app_demande_index' %}
+    {% set button_label = 'Créer' %}
+    {% include 'demande/_form_layout.html.twig' %}
+{% endblock %}

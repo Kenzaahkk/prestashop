@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la prestation{% endblock %}
+
+{% block body %}
+    {% set title = 'Modifier la prestation' %}
+    {% set back_path = 'app_prestation_index' %}
+    {% set button_label = 'Enregistrer' %}
+    {% include 'prestation/_form_layout.html.twig' %}
+{% endblock %}

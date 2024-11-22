@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4 text-primary">Bienvenue sur le site de prestations</h1>
+        <p class="lead mt-3">
+            Connectez-vous ou inscrivez-vous pour découvrir nos services et fonctionnalités.
+        </p>
+
+        {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="mt-4">
+                <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg px-4 me-3">
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </a>
+                <a href="{{ path('app_register') }}" class="btn btn-success btn-lg px-4">
+                    <i class="fas fa-user-plus"></i> Inscription
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4 text-center">
+            <i class="fas fa-briefcase fa-3x text-primary"></i>
+            <h3 class="mt-3">Prestataires</h3>
+            <p>Créez vos prestations et recevez des demandes de clients facilement.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-users fa-3x text-success"></i>
+            <h3 class="mt-3">Clients</h3>
+            <p>Explorez les prestations disponibles et faites des demandes en toute simplicité.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-star fa-3x text-warning"></i>
+            <h3 class="mt-3">Avis</h3>
+            <p>Donnez votre avis et partagez votre expérience pour aider la communauté.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

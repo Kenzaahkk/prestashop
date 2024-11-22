@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la Demande{% endblock %}
+
+{% block body %}
+    {% set title = 'Modifier la Demande' %}
+    {% set back_path = 'app_demande_index' %}
+    {% set button_label = 'Enregistrer' %}
+    {% include 'demande/_form_layout.html.twig' %}
+{% endblock %}

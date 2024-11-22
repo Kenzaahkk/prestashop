@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une nouvelle prestation{% endblock %}
+
+{% block body %}
+    {% set title = 'Créer une nouvelle prestation' %}
+    {% set back_path = 'app_prestation_index' %}
+    {% set button_label = 'Créer' %}
+    {% include 'prestation/_form_layout.html.twig' %}
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Prestation{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1 class="display-6 text-primary">{{ prestation.typePrestation.nom }}</h1>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Informations générales</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Disponibilité :</strong><br>
+                Du {{ prestation.dateDebutDisponibilite|date('d/m/Y') }}
+                au {{ prestation.dateFinDisponibilite|date('d/m/Y') }}
+            </p>
+            <p><strong>Prix :</strong> {{ prestation.prix }} €</p>
+            <p><strong>Prix journalier :</strong> {{ prestation.prixJour }} €</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Dates non disponibles</h5>
+        </div>
+        <div class="card-body">
+            {% if demandes is empty %}
+                <div class="alert alert-info text-center">Aucune date réservée.</div>
+            {% else %}
+                <ul>
+                    {% for demande in demandes %}
+                        <li>Du {{ demande.dateDebutPrestation|date('d/m/Y') }} au {{ demande.dateFinPrestation|date('d/m/Y') }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Note moyenne</h5>
+        </div>
+        <div class="card-body text-center">
+            {% set averageRating = prestation.getAverageRating() %}
+            {% for i in 1..5 %}
+                {% if i <= averageRating %}
+                    <i class="fas fa-star text-warning"></i>
+                {% else %}
+                    <i class="far fa-star text-secondary"></i>
+                {% endif %}
+            {% endfor %}
+            <p class="mt-2">({{ averageRating|number_format(1) }} / 5)</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Commentaires</h5>
+        </div>
+        <div class="card-body">
+            {% if prestation.commentaires is empty %}
+                <div class="alert alert-warning text-center">
+                    Aucun commentaire pour cette prestation.
+                </div>
+            {% else %}
+                <ul class="list-group">
+                    {% for commentaire in prestation.commentaires %}
+                        <li class="list-group-item">
+                            <strong>{{ commentaire.client.email }}</strong> - 
+                            <span>
+                                {% for i in 1..5 %}
+                                    {% if i <= commentaire.note %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-secondary"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                ({{ commentaire.note }} / 5)
+                            </span>
+                            <p class="mt-2">{{ commentaire.commentaire }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_CLIENT') %}
+        <div class="text-center">
+            <a href="{{ path('prestation_comment', {id: prestation.id}) }}" class="btn btn-primary">
+                <i class="fas fa-comment"></i> Laisser un commentaire
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
